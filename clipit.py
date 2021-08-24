@@ -951,7 +951,9 @@ def do_video(args):
 
     length = 15 # Desired time of the video in seconds
 
-    frames = []
+    last = Image.open(f'./steps/frame_{last_frame-1:04d}.png')
+    
+    frames = [last]
     tqdm.write('Generating video...')
     for i in range(init_frame,last_frame): #
         frames.append(Image.open(f'./steps/frame_{i:04d}.png'))
@@ -960,7 +962,7 @@ def do_video(args):
     fps = np.clip(total_frames/length,min_fps,max_fps)
 
     from subprocess import Popen, PIPE
-    
+
     from os import path
     output_file = path.join(path.dirname(args.output),"video.mp4")
 
