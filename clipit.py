@@ -666,7 +666,9 @@ def checkin(args, iter, losses):
         outfile = args.output
     else:
         outfile = anim_output_files[cur_anim_index]
-    img.save(outfile, pnginfo=info)
+        
+    #TODO: change way images are saved
+    #img.save(outfile, pnginfo=info)
     if cur_anim_index == len(anim_output_files) - 1:
         # save gif
         gif_output = make_gif(args, iter)
