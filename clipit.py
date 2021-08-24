@@ -960,8 +960,10 @@ def do_video(args):
     fps = np.clip(total_frames/length,min_fps,max_fps)
 
     from subprocess import Popen, PIPE
-    import re
-    output_file = re.compile('\.png$').sub('.mp4', args.output)
+    
+    from os import path
+    output_file = path.join(path.dirname(args.output),"video.mp4")
+
     p = Popen(['ffmpeg',
                '-y',
                '-f', 'image2pipe',
