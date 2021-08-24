@@ -677,6 +677,9 @@ def checkin(args, iter, losses):
         if cur_anim_index is None or iter == 0:
             display.display(display.Image(outfile))
 
+def output_path(args):
+    return os.path.dirname(args.output)
+
 def ascend_txt(args):
     global cur_iteration, cur_anim_index, perceptors, normalize, cutoutsTable, cutoutSizeTable
     global z_orig, z_targets, z_labels, init_image_tensor, target_image_tensor, drawer
@@ -811,7 +814,7 @@ def ascend_txt(args):
     if args.make_video:    
         img = np.array(out.mul(255).clamp(0, 255)[0].cpu().detach().numpy().astype(np.uint8))[:,:,:]
         img = np.transpose(img, (1, 2, 0))
-        imageio.imwrite(f'./steps/frame_{cur_iteration:04d}.png', np.array(img))
+        imageio.imwrite(f'{output_path(args)}/frame_{cur_iteration:04d}.png', np.array(img))
 
     return result
 
@@ -951,12 +954,12 @@ def do_video(args):
 
     length = 15 # Desired time of the video in seconds
 
-    last = Image.open(f'./steps/frame_{last_frame-1:04d}.png')
+    last = Image.open(f'{output_path(args)}/frame_{last_frame-1:04d}.png')
     
     frames = [last]
     tqdm.write('Generating video...')
     for i in range(init_frame,last_frame): #
-        frames.append(Image.open(f'./steps/frame_{i:04d}.png'))
+        frames.append(Image.open(f'{output_path(args)}/frame_{i:04d}.png'))
 
     #fps = last_frame/10
     fps = np.clip(total_frames/length,min_fps,max_fps)
@@ -1176,10 +1179,10 @@ def process_args(vq_parser, namespace=None):
     clip_models = args.clip_models.split(",")
     args.clip_models = [model.strip() for model in clip_models]
 
-    # Make video steps directory
+    # Make video output directory
     if args.make_video:
-        if not os.path.exists('steps'):
-            os.mkdir('steps')
+        if not os.path.exists(output_path(args)):
+            os.mkdir(output_path(args))
 
     # reset global animation variables
     cur_iteration=None
