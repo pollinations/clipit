@@ -937,8 +937,8 @@ def do_run(args):
         except KeyboardInterrupt:
             pass
 
-    if args.make_video:
-        do_video(args)
+    #if args.make_video:
+    #    do_video(args)
 
 def do_video(args):
     global cur_iteration
